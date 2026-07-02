@@ -1,4 +1,4 @@
-import logoAsset from "@/assets/souls-logo.png.asset.json";
+import { SOULS_LOGO } from "@/lib/logos";
 
 const Footer = () => {
   return (
@@ -8,7 +8,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center font-display text-lg font-extrabold uppercase text-foreground">
               <img
-                src={logoAsset.url}
+                src={SOULS_LOGO}
                 alt="SOULS"
                 className="h-[4.5rem] w-auto object-contain brightness-110 hover:brightness-125 transition-all duration-300"
               />

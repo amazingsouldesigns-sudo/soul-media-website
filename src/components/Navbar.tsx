@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, LogIn, LogOut, LayoutDashboard, Search, UserCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import logoAsset from "@/assets/souls-logo.png.asset.json";
+import { SOULS_LOGO } from "@/lib/logos";
 
 const navLinks = [
   { label: "Capabilities", href: "#services" },
@@ -68,13 +68,13 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-[1800px] mx-auto px-6 lg:px-16 flex items-center justify-between h-20">
-        <a href="#" className="flex items-center font-display text-lg font-extrabold uppercase text-foreground">
+        <Link to="/" className="flex items-center shrink-0">
           <img
-            src={logoAsset.url}
-            alt="SOULS"
-            className="h-[4.5rem] w-auto object-contain brightness-110 hover:brightness-125 transition-all duration-300"
+            src={SOULS_LOGO}
+            alt="SOULS Media Group"
+            className="h-12 md:h-14 w-auto object-contain brightness-110 hover:brightness-125 transition-all duration-300"
           />
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-12">
           {navLinks.map((link) => (

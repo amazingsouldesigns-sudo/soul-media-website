@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Search, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoAsset from "@/assets/soul_logo_copy.png.asset.json";
+import { SOULS_LOGO_COPY } from "@/lib/logos";
 
 interface BookingRow {
   id: string;
@@ -61,7 +61,7 @@ const BookingStatus = () => {
         <div className="max-w-3xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1 font-display text-lg font-extrabold uppercase text-foreground">
             <img 
-              src={logoAsset.url} 
+              src={SOULS_LOGO_COPY} 
               alt="S" 
               className="h-8 w-auto object-contain inline-block mr-1 brightness-110 hover:brightness-125 transition-all duration-300" 
             />

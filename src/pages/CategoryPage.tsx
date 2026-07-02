@@ -8,12 +8,12 @@ import BookingForm from "@/components/BookingForm";
 import { CATEGORIES } from "@/components/CategoriesSection";
 import { CONTACT, buildWhatsAppUrl, buildMailtoUrl } from "@/lib/contact";
 import { CATEGORY_REELS } from "@/lib/categoryReels";
-import krispyKreme from "@/assets/brands/krispy-kreme.svg.asset.json";
-import pizzaHut from "@/assets/brands/pizza-hut.svg.asset.json";
-import sprite from "@/assets/brands/sprite.svg.asset.json";
-import redbull from "@/assets/brands/redbull.svg.asset.json";
+import krispyKreme from "@/assets/brands/krispy-kreme.svg";
+import pizzaHut from "@/assets/brands/pizza-hut.svg";
+import sprite from "@/assets/brands/sprite.svg";
+import redbull from "@/assets/brands/redbull.svg";
 
-const TRUST_LOGOS = [krispyKreme.url, pizzaHut.url, sprite.url, redbull.url];
+const TRUST_LOGOS = [krispyKreme, pizzaHut, sprite, redbull];
 
 const TRUST_QUOTES: Record<string, { quote: string; attribution: string }> = {
   ads: { quote: "They turned our launch into appointment viewing.", attribution: "Brand Marketing Lead, F&B" },

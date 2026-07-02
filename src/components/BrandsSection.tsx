@@ -1,13 +1,13 @@
-import krispyKreme from "@/assets/brands/krispy-kreme.svg.asset.json";
-import pizzaHut from "@/assets/brands/pizza-hut.svg.asset.json";
-import sprite from "@/assets/brands/sprite.svg.asset.json";
-import redbull from "@/assets/brands/redbull.svg.asset.json";
+import krispyKreme from "@/assets/brands/krispy-kreme.svg";
+import pizzaHut from "@/assets/brands/pizza-hut.svg";
+import sprite from "@/assets/brands/sprite.svg";
+import redbull from "@/assets/brands/redbull.svg";
 
 const brands = [
-  { name: "Krispy Kreme", logo: krispyKreme.url },
-  { name: "Pizza Hut", logo: pizzaHut.url },
-  { name: "Sprite", logo: sprite.url },
-  { name: "Red Bull", logo: redbull.url },
+  { name: "Krispy Kreme", logo: krispyKreme },
+  { name: "Pizza Hut", logo: pizzaHut },
+  { name: "Sprite", logo: sprite },
+  { name: "Red Bull", logo: redbull },
 ];
 
 const BrandsSection = () => {

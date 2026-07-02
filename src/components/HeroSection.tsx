@@ -1,43 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { HERO_VIDEOS } from "@/lib/videos";
 
-const videos = [
-  {
-    title: "XODUS WET x CAMPARI",
-    subtitle: "Brand Campaign — 2026",
-    src: "https://dl.dropboxusercontent.com/scl/fi/liyofu1tqro1gg3qypesk/XODUS-WET-x-CAMPARI-2026-Final.mp4?rlkey=ykq9w721o7idxkj2rrx1ldjeu&st=tlfw46j1",
-  },
-  {
-    title: "Night Carnival",
-    subtitle: "Event Recap — Red Passion 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/6rxrt2j8lqnhiy28gaaou/Night-Carnival-Recap-Red-Passion-4k.mp4?rlkey=hhb1gdu1rdrl70a6qnalbxo6g&st=c3c2te0e",
-  },
-  {
-    title: "REDBULL x ILS",
-    subtitle: "Brand Activation — 2025",
-    src: "https://dl.dropboxusercontent.com/scl/fi/sh3hyo99nc5dppoayjhny/REDBULL-x-ILS-Final.mp4?rlkey=ixb7wd86y9gozxxfy6h4752n1&st=enmjlc0q",
-  },
-  {
-    title: "REDBULL x UWI Band Launch",
-    subtitle: "Event Coverage — 2025",
-    src: "https://dl.dropboxusercontent.com/scl/fi/thd8iw8gzb1867q167ynt/REDBULL-x-UWI-Band-Launch.mp4?rlkey=9bfos1cebdkaew25xeoi2pawd&st=jufpcv7a",
-  },
-  {
-    title: "7Krave Ad",
-    subtitle: "Commercial — Brand Spot",
-    src: "https://dl.dropboxusercontent.com/scl/fi/bd9dwxcggiv5pkuisw7l6/7krave-Ad-with-Engaging-end-music-HQ.mp4?rlkey=r1yc1nkg2yjypj42g69kup7cd&st=qrpmi8rb",
-  },
-  {
-    title: "Appleton Estate Bartender",
-    subtitle: "Competition Recap — 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/bnl7gdnslf7gelc1ou15i/Appleton-Estate-Bartender-Competition-4K.mp4?rlkey=4424b1lfrhagmxuccd4nyi4ad&st=0c1uet7b",
-  },
-  {
-    title: "AE x Jamaica Carnival",
-    subtitle: "Event Recap — 2026 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/ednx1y0hyi7cvmk7ry3ti/AE-x-Jamaica-Carnival-2026-4k.mp4?rlkey=fm4c0liyyk075d9qv9wcwcwlq&st=ztigm5l6",
-  },
-];
+const videos = HERO_VIDEOS;
 
 const SLIDE_DURATION = 8000; // 8 seconds per video
 

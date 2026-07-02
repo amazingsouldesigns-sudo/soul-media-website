@@ -1,6 +1,5 @@
 // Notify owner of a new booking enquiry.
-// This function is best-effort: if email infrastructure isn't fully configured yet,
-// it returns 200 so the form UX isn't blocked. Enquiries are always saved to DB.
+// Best-effort: if email isn't configured, returns 200 so the form UX isn't blocked.
 
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
@@ -58,35 +57,36 @@ Deno.serve(async (req) => {
       </body></html>
     `;
 
-    // Attempt to send via Lovable Email API. If LOVABLE_API_KEY isn't configured
-    // or the email domain isn't ready, log and return success so form UX isn't blocked.
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    const apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) {
-      console.log("LOVABLE_API_KEY not set — skipping email send. Enquiry saved to DB.");
+      console.log("RESEND_API_KEY not set — skipping email send.");
       return new Response(
         JSON.stringify({ ok: true, emailed: false, reason: "no_api_key" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    const from = Deno.env.get("RESEND_FROM") ?? "SOULS Media <onboarding@resend.dev>";
+
     try {
-      const res = await fetch("https://api.lovable.dev/v1/emails/send", {
+      const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          to: OWNER_EMAIL,
+          from,
+          to: [OWNER_EMAIL],
           subject: `New ${payload.category || "booking"} enquiry — ${payload.name || "anon"}`,
           html,
-          replyTo: payload.email,
+          reply_to: payload.email || undefined,
         }),
       });
 
       if (!res.ok) {
         const text = await res.text();
-        console.log(`Email send returned ${res.status}: ${text}`);
+        console.log(`Resend returned ${res.status}: ${text}`);
         return new Response(
           JSON.stringify({ ok: true, emailed: false, reason: `api_${res.status}` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

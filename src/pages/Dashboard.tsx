@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
-import logoAsset from "@/assets/soul_logo_copy.png.asset.json";
+import { SOULS_LOGO_COPY } from "@/lib/logos";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -193,7 +193,7 @@ const Dashboard = () => {
           <div>
             <Link to="/" className="flex items-center gap-1 font-display text-lg font-extrabold uppercase text-foreground">
               <img 
-                src={logoAsset.url} 
+                src={SOULS_LOGO_COPY} 
                 alt="S" 
                 className="h-8 w-auto object-contain inline-block mr-1 brightness-110 hover:brightness-125 transition-all duration-300" 
               />
