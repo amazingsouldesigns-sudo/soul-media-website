@@ -12,12 +12,23 @@ interface EnquiryPayload {
   email?: string;
   phone?: string;
   project_type?: string;
+  budget_range?: string;
   hours_required?: string;
   num_shooters?: string;
   preferred_date?: string;
+  flexible_date?: boolean;
   additional_requirements?: string;
   deliverables?: string[];
+  attachment_count?: number;
 }
+
+const BUDGET_LABELS: Record<string, string> = {
+  under_2k: "Under $2,000",
+  "2k_5k": "$2,000 – $5,000",
+  "5k_10k": "$5,000 – $10,000",
+  "10k_plus": "$10,000+",
+  unsure: "Not sure yet",
+};
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -47,10 +58,12 @@ Deno.serve(async (req) => {
           ${row("Email", payload.email)}
           ${row("Phone", payload.phone)}
           ${row("Project type", payload.project_type)}
+          ${row("Budget", payload.budget_range ? (BUDGET_LABELS[payload.budget_range] ?? payload.budget_range) : "")}
           ${row("Hours", payload.hours_required)}
           ${row("Shooters", payload.num_shooters)}
-          ${row("Preferred date", payload.preferred_date)}
+          ${row("Preferred date", payload.flexible_date ? "Flexible" : payload.preferred_date)}
           ${row("Deliverables", payload.deliverables)}
+          ${row("Attachments", payload.attachment_count ? String(payload.attachment_count) : "")}
           ${row("Notes", payload.additional_requirements)}
         </table>
         <p style="color:#999;font-size:12px;margin-top:24px;">Reply directly to ${escapeHtml(payload.email || OWNER_EMAIL)} to follow up.</p>

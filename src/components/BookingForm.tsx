@@ -116,7 +116,15 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(draftKey);
-      if (raw) setValues({ ...initial, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setValues({
+          ...initial,
+          ...parsed,
+          // Guard against corrupted drafts so array fields never break rendering
+          deliverables: Array.isArray(parsed?.deliverables) ? parsed.deliverables : [],
+        });
+      }
     } catch {
       /* ignore */
     }
@@ -415,13 +423,23 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
                       type="button"
                       key={opt}
                       onClick={() => toggleDeliverable(opt)}
+                      aria-pressed={checked}
                       className={`flex items-center gap-3 border px-4 py-3 text-left transition-all duration-200 ${
                         checked
                           ? "border-primary bg-primary/10 text-foreground"
                           : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
                       }`}
                     >
-                      <Checkbox checked={checked} className="pointer-events-none" />
+                      <span
+                        className={cn(
+                          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors",
+                          checked
+                            ? "bg-primary border-primary text-primary-foreground"
+                            : "border-primary",
+                        )}
+                      >
+                        {checked && <Check className="h-3 w-3" />}
+                      </span>
                       <span className="text-sm font-body">{opt}</span>
                     </button>
                   );
