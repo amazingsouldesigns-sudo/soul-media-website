@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +7,49 @@
 
 @layer base {
   :root {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 93%;
+    --background: 240 5% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 93%;
+    --card: 240 4% 8%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 93%;
+    --popover: 240 4% 8%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 191 100% 50%;
-    --primary-foreground: 0 0% 3%;
+    --primary: 0 100% 58%;
+    --primary-foreground: 240 5% 4%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 70%;
+    --secondary: 240 4% 10%;
+    --secondary-foreground: 0 0% 72%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 240 4% 10%;
+    --muted-foreground: 0 0% 52%;
 
-    --accent: 240 88% 25%;
-    --accent-foreground: 0 0% 93%;
+    --accent: 0 100% 58%;
+    --accent-foreground: 240 5% 4%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
-    --ring: 191 100% 50%;
+    --border: 240 4% 14%;
+    --input: 240 4% 14%;
+    --ring: 0 100% 58%;
 
-    --radius: 0px;
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 0 0% 93%;
-    --sidebar-primary: 191 100% 50%;
-    --sidebar-primary-foreground: 0 0% 3%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 93%;
-    --sidebar-border: 0 0% 14%;
-    --sidebar-ring: 191 100% 50%;
+    --sidebar-background: 240 5% 5%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 100% 58%;
+    --sidebar-primary-foreground: 240 5% 4%;
+    --sidebar-accent: 240 4% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 4% 14%;
+    --sidebar-ring: 0 100% 58%;
 
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'Space Grotesk', monospace;
+    --font-display: 'Switzer', system-ui, sans-serif;
+    --font-body: 'Switzer', system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
 }
 
@@ -60,7 +63,9 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    /* `clip` cuts horizontal overflow without creating a scroll container —
+       `hidden` here makes body the scroller and bypasses Lenis smooth scroll */
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -68,8 +73,8 @@
   }
 
   ::selection {
-    background: hsl(191 100% 50% / 0.3);
-    color: hsl(0 0% 93%);
+    background: hsl(0 100% 58% / 0.35);
+    color: hsl(0 0% 98%);
   }
 }
 
@@ -103,6 +108,214 @@
   90% { transform: translate(-10%, 10%); }
 }
 
+/* ===== Shiny CTA — animated conic border + shimmer + breathing glow ===== */
+@property --gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --gradient-percent {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 5%;
+}
+@property --gradient-shine {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: white;
+}
+
+.shiny-cta {
+  --shiny-cta-bg: hsl(240 4% 9%);
+  --shiny-cta-bg-subtle: hsl(240 4% 17%);
+  --shiny-cta-fg: hsl(0 0% 98%);
+  --shiny-cta-highlight: hsl(0 100% 58%);
+  --shiny-cta-highlight-subtle: hsl(0 100% 74%);
+  --animation: gradient-angle linear infinite;
+  --duration: 6s;
+  --shadow-size: 2px;
+  --transition: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  outline-offset: 4px;
+  border: 1px solid transparent;
+  border-radius: 360px;
+  color: var(--shiny-cta-fg);
+  background:
+    linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
+    conic-gradient(
+        from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+        transparent,
+        var(--shiny-cta-highlight) var(--gradient-percent),
+        var(--gradient-shine) calc(var(--gradient-percent) * 2),
+        var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
+        transparent calc(var(--gradient-percent) * 4)
+      )
+      border-box;
+  box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
+  transition:
+    --gradient-angle-offset var(--transition),
+    --gradient-percent var(--transition),
+    --gradient-shine var(--transition);
+}
+
+.shiny-cta:active {
+  translate: 0 1px;
+}
+
+.shiny-cta::before,
+.shiny-cta::after,
+.shiny-cta > span::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  z-index: -1;
+}
+
+/* Dotted texture ring, revealed by a rotating conic mask */
+.shiny-cta::before {
+  --size: calc(100% - var(--shadow-size) * 3);
+  --position: 2px;
+  --space: calc(var(--position) * 2);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle at var(--position) var(--position), white calc(var(--position) / 4), transparent 0) padding-box;
+  background-size: var(--space) var(--space);
+  background-repeat: space;
+  mask-image: conic-gradient(from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black);
+  border-radius: inherit;
+  opacity: 0.4;
+}
+
+/* Diagonal shimmer sweep */
+.shiny-cta::after {
+  --animation: shimmer linear infinite;
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(-50deg, transparent, var(--shiny-cta-highlight), transparent);
+  mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  opacity: 0.18;
+}
+
+.shiny-cta > span {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Breathing inner glow (ignites on hover) */
+.shiny-cta > span::before {
+  --size: calc(100% + 1rem);
+  width: var(--size);
+  height: var(--size);
+  box-shadow: inset 0 -1ex 2rem 4px var(--shiny-cta-highlight);
+  opacity: 0;
+  transition: opacity var(--transition);
+  animation: calc(var(--duration) * 1.5) breathe linear infinite;
+}
+
+.shiny-cta,
+.shiny-cta::before,
+.shiny-cta::after {
+  animation:
+    var(--animation) var(--duration),
+    var(--animation) calc(var(--duration) / 0.4) reverse paused;
+  animation-composition: add;
+}
+
+.shiny-cta:is(:hover, :focus-visible) {
+  --gradient-percent: 20%;
+  --gradient-angle-offset: 95deg;
+  --gradient-shine: var(--shiny-cta-highlight-subtle);
+}
+
+.shiny-cta:is(:hover, :focus-visible),
+.shiny-cta:is(:hover, :focus-visible)::before,
+.shiny-cta:is(:hover, :focus-visible)::after {
+  animation-play-state: running;
+}
+
+.shiny-cta:is(:hover, :focus-visible) > span::before {
+  opacity: 1;
+}
+
+@keyframes gradient-angle {
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+}
+
+/* ===== Text roll — staggered per-letter hover ===== */
+.text-roll {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.05;
+}
+
+.text-roll-row {
+  display: block;
+  white-space: nowrap;
+}
+
+.text-roll-clone {
+  position: absolute;
+  inset: 0;
+}
+
+.text-roll-letter {
+  display: inline-block;
+  transform: translateY(0);
+  transition:
+    transform 0.52s cubic-bezier(0.7, 0, 0.3, 1),
+    color 0.45s ease-out;
+  transition-delay: calc(var(--i, 0) * 14ms);
+}
+
+.text-roll .text-roll-clone .text-roll-letter {
+  color: hsl(var(--primary));
+  transform: translateY(105%);
+}
+
+.text-roll:hover .text-roll-row > .text-roll-letter,
+.roll-trigger:hover .text-roll .text-roll-row > .text-roll-letter {
+  transform: translateY(-105%);
+}
+
+.text-roll:hover .text-roll-clone .text-roll-letter,
+.roll-trigger:hover .text-roll .text-roll-clone .text-roll-letter {
+  transform: translateY(0);
+}
+
 /* Marquee */
 @keyframes marquee {
   0% { transform: translateX(0%); }
@@ -130,9 +343,9 @@
   gap: 2rem;
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+/* Smooth scroll is handled by Lenis (see SmoothScroll.tsx) */
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
 /* Custom scrollbar */
@@ -149,7 +362,46 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(191 100% 50%);
+  background: hsl(0 100% 58%);
+}
+
+/* ===== Reduced motion — calm everything down ===== */
+@media (prefers-reduced-motion: reduce) {
+  .film-grain::after {
+    animation: none;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+
+  .shiny-cta,
+  .shiny-cta::before,
+  .shiny-cta::after,
+  .shiny-cta > span::before {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .text-roll-letter {
+    transition: color 0.3s ease-out;
+    transition-delay: 0s;
+  }
+
+  .text-roll:hover .text-roll-row > .text-roll-letter,
+  .roll-trigger:hover .text-roll .text-roll-row > .text-roll-letter {
+    transform: none;
+    color: hsl(var(--primary));
+  }
+
+  .text-roll:hover .text-roll-clone .text-roll-letter,
+  .roll-trigger:hover .text-roll .text-roll-clone .text-roll-letter {
+    transform: translateY(105%);
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @layer utilities {
@@ -161,13 +413,31 @@ html {
     font-family: var(--font-body);
   }
 
+  .text-serif-italic {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .text-mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
   .text-stroke {
-    -webkit-text-stroke: 1.5px hsl(0 0% 93%);
+    -webkit-text-stroke: 1.5px hsl(0 0% 98%);
     color: transparent;
   }
 
   .text-stroke-accent {
-    -webkit-text-stroke: 1.5px hsl(191 100% 50%);
+    -webkit-text-stroke: 1.5px hsl(0 100% 58%);
     color: transparent;
+  }
+
+  .glow-accent {
+    text-shadow: 0 0 24px hsl(0 100% 58% / 0.55);
   }
 }

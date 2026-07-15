@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LogIn, LogOut, LayoutDashboard, Search, UserCircle } from "lucide-react";
+import { ArrowRight, LogIn, LogOut, LayoutDashboard, Search, UserCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import logoAsset from "@/assets/souls-logo.png.asset.json";
+import { SOULS_LOGO } from "@/lib/logos";
+import TextRoll from "@/components/TextRoll";
 
 const navLinks = [
   { label: "Capabilities", href: "#services" },
@@ -15,7 +16,7 @@ const navLinks = [
 const Navbar = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>["data"]["session"]>(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -52,140 +53,124 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    setMobileOpen(false);
+    setMenuOpen(false);
     navigate("/");
   };
 
   return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-        scrolled
-          ? "bg-background/60 backdrop-blur-2xl border-b border-border"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16 flex items-center justify-between h-20">
-        <a href="#" className="flex items-center font-display text-lg font-extrabold uppercase text-foreground">
-          <img
-            src={logoAsset.url}
-            alt="SOULS"
-            className="h-[4.5rem] w-auto object-contain brightness-110 hover:brightness-125 transition-all duration-300"
-          />
-        </a>
+    <>
+      <nav className="fixed top-4 inset-x-4 z-50 flex justify-center">
+        <motion.div
+          initial={{ y: -24, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-xl"
+        >
+        <div
+          className={`flex items-center justify-between gap-3 rounded-full border px-3 py-2 transition-all duration-500 ${
+            scrolled || menuOpen
+              ? "bg-background/80 border-border backdrop-blur-2xl"
+              : "bg-background/50 border-border/60 backdrop-blur-xl"
+          }`}
+        >
+          <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center shrink-0 pl-2">
+            <img
+              src={SOULS_LOGO}
+              alt="SOULS Media Group"
+              className="h-8 sm:h-9 w-auto object-contain brightness-110 hover:brightness-125 transition-all duration-300"
+            />
+          </Link>
 
-        <div className="hidden md:flex items-center gap-12">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-xs font-body font-medium tracking-[0.25em] uppercase text-muted-foreground hover:text-primary transition-colors duration-500"
-            >
-              {link.label}
-            </a>
-          ))}
-          {isAdmin && (
-            <Link
-              to="/dashboard"
-              className="text-xs font-body font-medium tracking-[0.25em] uppercase text-primary hover:text-primary/80 transition-colors duration-500 flex items-center gap-1.5"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
-            </Link>
-          )}
-          {session ? (
-            <button
-              onClick={handleSignOut}
-              className="text-xs font-body font-medium tracking-[0.25em] uppercase text-muted-foreground hover:text-primary transition-colors duration-500 flex items-center gap-1.5"
-            >
-              <LogOut className="w-3.5 h-3.5" /> Sign Out
-            </button>
-          ) : (
-            <Link
-              to="/auth"
-              className="text-xs font-body font-medium tracking-[0.25em] uppercase text-muted-foreground hover:text-primary transition-colors duration-500 flex items-center gap-1.5"
-            >
-              <LogIn className="w-3.5 h-3.5" /> Login
-            </Link>
-          )}
           <a
             href="/#categories"
-            className="text-xs font-body font-medium tracking-[0.15em] uppercase bg-primary text-primary-foreground px-6 py-2.5 hover:bg-primary/80 transition-all duration-300"
+            onClick={() => setMenuOpen(false)}
+            className="shiny-cta group flex items-center whitespace-nowrap text-[0.65rem] sm:text-xs font-semibold tracking-[0.08em] uppercase px-4 sm:px-5 py-2.5"
           >
-            Start a Project
+            <span>
+              Start a Project
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </span>
           </a>
-        </div>
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-foreground"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/60 hover:border-primary/60 transition-colors duration-300"
+          >
+            <span
+              className={`absolute h-px w-4 bg-foreground transition-all duration-300 ${
+                menuOpen ? "rotate-45" : "-translate-y-[3px]"
+              }`}
+            />
+            <span
+              className={`absolute h-px w-4 bg-foreground transition-all duration-300 ${
+                menuOpen ? "-rotate-45" : "translate-y-[3px]"
+              }`}
+            />
+          </button>
+        </div>
+        </motion.div>
+      </nav>
 
       <AnimatePresence>
-        {mobileOpen && (
+        {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "100vh" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background fixed inset-0 top-20 z-50 flex flex-col items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-2xl flex flex-col items-center justify-center"
           >
+            <span className="text-mono-label text-muted-foreground mb-10">[ MENU ]</span>
             {navLinks.map((link, i) => (
               <motion.a
                 key={link.label}
                 href={link.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="text-3xl font-display font-bold text-foreground mb-8 hover:text-primary transition-colors"
+                transition={{ delay: 0.1 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                className="group roll-trigger flex items-baseline gap-4 mb-6"
               >
-                {link.label}
+                <span className="text-mono-label text-muted-foreground/60 group-hover:text-primary transition-colors">
+                  0{i + 1}
+                </span>
+                <span className="text-4xl md:text-5xl font-display font-semibold text-foreground">
+                  <TextRoll text={link.label} />
+                </span>
               </motion.a>
             ))}
-            <motion.a
-              href="/#categories"
-              onClick={() => setMobileOpen(false)}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: navLinks.length * 0.1 }}
-              className="text-sm font-body font-bold tracking-[0.2em] uppercase bg-primary text-primary-foreground px-8 py-3 mb-10 hover:bg-primary/80 transition-colors"
-            >
-              Start a Project
-            </motion.a>
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: navLinks.length * 0.1 }}
-              className="flex flex-col items-center gap-6"
+              transition={{ delay: 0.1 + navLinks.length * 0.07 }}
+              className="mt-10 flex flex-col items-center gap-5"
             >
               <Link
                 to="/booking-status"
-                onClick={() => setMobileOpen(false)}
-                className="text-sm font-body font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                onClick={() => setMenuOpen(false)}
+                className="text-mono-label text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
               >
                 <Search className="w-4 h-4" /> Booking Status
               </Link>
               {isAdmin && (
                 <Link
                   to="/dashboard"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-sm font-body uppercase tracking-[0.3em] text-primary hover:text-primary/80 transition-colors flex items-center gap-2"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-mono-label text-primary hover:text-primary/80 transition-colors flex items-center gap-2"
                 >
                   <LayoutDashboard className="w-4 h-4" /> Dashboard
                 </Link>
               )}
               {session ? (
                 <>
-                  <span className="text-xs font-body uppercase tracking-[0.3em] text-muted-foreground/60 flex items-center gap-2">
+                  <span className="text-mono-label text-muted-foreground/60 flex items-center gap-2">
                     <UserCircle className="w-4 h-4" /> {session.user.email}
                   </span>
                   <button
                     onClick={handleSignOut}
-                    className="text-sm font-body uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                    className="text-mono-label text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
                   >
                     <LogOut className="w-4 h-4" /> Sign Out
                   </button>
@@ -193,8 +178,8 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/auth"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-sm font-body font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-mono-label text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <LogIn className="w-4 h-4" /> Login
                 </Link>
@@ -203,7 +188,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </>
   );
 };
 

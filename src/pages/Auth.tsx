@@ -62,13 +62,13 @@ const Auth = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md border border-border bg-card/40 backdrop-blur-xl p-10"
+        className="w-full max-w-md rounded-3xl border border-border bg-card/40 backdrop-blur-xl p-10"
       >
-        <Link to="/" className="font-display text-sm tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/" className="text-mono-label text-muted-foreground hover:text-primary transition-colors">
           ← Back
         </Link>
-        <h1 className="font-display text-3xl font-bold mt-6 mb-2 text-foreground">
-          {mode === "signin" ? "Sign In" : "Create Account"}
+        <h1 className="font-display text-3xl font-semibold tracking-tight mt-6 mb-2 text-foreground">
+          {mode === "signin" ? "Sign in" : "Create account"}
         </h1>
         <p className="text-sm text-muted-foreground mb-8 font-body">
           {mode === "signin" ? "Access your SOULS dashboard." : "Register to access the dashboard."}
@@ -100,7 +100,7 @@ const Auth = () => {
         <button
           type="button"
           onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-6 w-full text-xs uppercase tracking-[0.25em] text-muted-foreground hover:text-primary transition-colors"
+          className="mt-6 w-full text-mono-label text-muted-foreground hover:text-primary transition-colors"
         >
           {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}
         </button>

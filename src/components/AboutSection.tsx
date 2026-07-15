@@ -1,4 +1,5 @@
 import { motion, useInView } from "framer-motion";
+import RevealHeading from "@/components/RevealHeading";
 import { useRef } from "react";
 
 const stats = [
@@ -13,8 +14,8 @@ const AboutSection = () => {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="py-32 lg:py-44 border-t border-border">
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+    <section id="about" className="py-24 md:py-32 lg:py-44 border-t border-border">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32">
           {/* Left - big statement */}
           <motion.div
@@ -24,25 +25,25 @@ const AboutSection = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-                The Studio
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
+                [05] &nbsp;The studio
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-6xl font-extrabold uppercase text-foreground leading-[0.95]">
-              We Don't Do
+            <RevealHeading className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
+              We don't do
               <br />
-              <span className="text-stroke">Average</span>.
-            </h2>
+              <span className="text-serif-italic text-primary">average</span>.
+            </RevealHeading>
 
             {/* Stats grid */}
-            <div className="grid grid-cols-4 gap-4 mt-16 pt-10 border-t border-border">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-8 mt-16 pt-10 border-t border-border">
               {stats.map((stat) => (
                 <div key={stat.label}>
-                  <p className="font-display text-2xl md:text-3xl font-extrabold text-primary">
+                  <p className="font-display text-2xl md:text-3xl font-semibold text-foreground">
                     {stat.value}
                   </p>
-                  <p className="mt-1 font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
+                  <p className="mt-1 text-mono-label text-muted-foreground text-[0.6rem]">
                     {stat.label}
                   </p>
                 </div>
@@ -59,7 +60,7 @@ const AboutSection = () => {
           >
             <p className="font-body text-lg leading-relaxed text-secondary-foreground mb-8">
               SOULS Media Group exists at the intersection of cinema and commerce.
-              We're not a generic video shop — we're a creative weapon for brands
+              We're not a generic video shop. We're a creative weapon for brands
               that understand the power of visual storytelling.
             </p>
             <p className="font-body text-sm leading-relaxed text-muted-foreground mb-10">
@@ -70,7 +71,7 @@ const AboutSection = () => {
             </p>
             <div className="flex items-center gap-6">
               <div className="w-16 h-px bg-primary" />
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground">
+              <p className="text-mono-label text-muted-foreground text-[0.65rem]">
                 Based in the culture. Built for the future.
               </p>
             </div>

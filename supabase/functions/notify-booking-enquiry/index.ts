@@ -1,6 +1,5 @@
 // Notify owner of a new booking enquiry.
-// This function is best-effort: if email infrastructure isn't fully configured yet,
-// it returns 200 so the form UX isn't blocked. Enquiries are always saved to DB.
+// Best-effort: if email isn't configured, returns 200 so the form UX isn't blocked.
 
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
@@ -13,12 +12,23 @@ interface EnquiryPayload {
   email?: string;
   phone?: string;
   project_type?: string;
+  budget_range?: string;
   hours_required?: string;
   num_shooters?: string;
   preferred_date?: string;
+  flexible_date?: boolean;
   additional_requirements?: string;
   deliverables?: string[];
+  attachment_count?: number;
 }
+
+const BUDGET_LABELS: Record<string, string> = {
+  under_2k: "Under $2,000",
+  "2k_5k": "$2,000 – $5,000",
+  "5k_10k": "$5,000 – $10,000",
+  "10k_plus": "$10,000+",
+  unsure: "Not sure yet",
+};
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -48,45 +58,48 @@ Deno.serve(async (req) => {
           ${row("Email", payload.email)}
           ${row("Phone", payload.phone)}
           ${row("Project type", payload.project_type)}
+          ${row("Budget", payload.budget_range ? (BUDGET_LABELS[payload.budget_range] ?? payload.budget_range) : "")}
           ${row("Hours", payload.hours_required)}
           ${row("Shooters", payload.num_shooters)}
-          ${row("Preferred date", payload.preferred_date)}
+          ${row("Preferred date", payload.flexible_date ? "Flexible" : payload.preferred_date)}
           ${row("Deliverables", payload.deliverables)}
+          ${row("Attachments", payload.attachment_count ? String(payload.attachment_count) : "")}
           ${row("Notes", payload.additional_requirements)}
         </table>
         <p style="color:#999;font-size:12px;margin-top:24px;">Reply directly to ${escapeHtml(payload.email || OWNER_EMAIL)} to follow up.</p>
       </body></html>
     `;
 
-    // Attempt to send via Lovable Email API. If LOVABLE_API_KEY isn't configured
-    // or the email domain isn't ready, log and return success so form UX isn't blocked.
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    const apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) {
-      console.log("LOVABLE_API_KEY not set — skipping email send. Enquiry saved to DB.");
+      console.log("RESEND_API_KEY not set — skipping email send.");
       return new Response(
         JSON.stringify({ ok: true, emailed: false, reason: "no_api_key" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    const from = Deno.env.get("RESEND_FROM") ?? "SOULS Media <onboarding@resend.dev>";
+
     try {
-      const res = await fetch("https://api.lovable.dev/v1/emails/send", {
+      const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          to: OWNER_EMAIL,
+          from,
+          to: [OWNER_EMAIL],
           subject: `New ${payload.category || "booking"} enquiry — ${payload.name || "anon"}`,
           html,
-          replyTo: payload.email,
+          reply_to: payload.email || undefined,
         }),
       });
 
       if (!res.ok) {
         const text = await res.text();
-        console.log(`Email send returned ${res.status}: ${text}`);
+        console.log(`Resend returned ${res.status}: ${text}`);
         return new Response(
           JSON.stringify({ ok: true, emailed: false, reason: `api_${res.status}` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

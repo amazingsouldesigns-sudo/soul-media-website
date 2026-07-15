@@ -1,45 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { HERO_VIDEOS } from "@/lib/videos";
 
-const videos = [
-  {
-    title: "XODUS WET x CAMPARI",
-    subtitle: "Brand Campaign — 2026",
-    src: "https://dl.dropboxusercontent.com/scl/fi/liyofu1tqro1gg3qypesk/XODUS-WET-x-CAMPARI-2026-Final.mp4?rlkey=ykq9w721o7idxkj2rrx1ldjeu&st=tlfw46j1",
-  },
-  {
-    title: "Night Carnival",
-    subtitle: "Event Recap — Red Passion 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/6rxrt2j8lqnhiy28gaaou/Night-Carnival-Recap-Red-Passion-4k.mp4?rlkey=hhb1gdu1rdrl70a6qnalbxo6g&st=c3c2te0e",
-  },
-  {
-    title: "REDBULL x ILS",
-    subtitle: "Brand Activation — 2025",
-    src: "https://dl.dropboxusercontent.com/scl/fi/sh3hyo99nc5dppoayjhny/REDBULL-x-ILS-Final.mp4?rlkey=ixb7wd86y9gozxxfy6h4752n1&st=enmjlc0q",
-  },
-  {
-    title: "REDBULL x UWI Band Launch",
-    subtitle: "Event Coverage — 2025",
-    src: "https://dl.dropboxusercontent.com/scl/fi/thd8iw8gzb1867q167ynt/REDBULL-x-UWI-Band-Launch.mp4?rlkey=9bfos1cebdkaew25xeoi2pawd&st=jufpcv7a",
-  },
-  {
-    title: "7Krave Ad",
-    subtitle: "Commercial — Brand Spot",
-    src: "https://dl.dropboxusercontent.com/scl/fi/bd9dwxcggiv5pkuisw7l6/7krave-Ad-with-Engaging-end-music-HQ.mp4?rlkey=r1yc1nkg2yjypj42g69kup7cd&st=qrpmi8rb",
-  },
-  {
-    title: "Appleton Estate Bartender",
-    subtitle: "Competition Recap — 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/bnl7gdnslf7gelc1ou15i/Appleton-Estate-Bartender-Competition-4K.mp4?rlkey=4424b1lfrhagmxuccd4nyi4ad&st=0c1uet7b",
-  },
-  {
-    title: "AE x Jamaica Carnival",
-    subtitle: "Event Recap — 2026 4K",
-    src: "https://dl.dropboxusercontent.com/scl/fi/ednx1y0hyi7cvmk7ry3ti/AE-x-Jamaica-Carnival-2026-4k.mp4?rlkey=fm4c0liyyk075d9qv9wcwcwlq&st=ztigm5l6",
-  },
-];
+const videos = HERO_VIDEOS;
 
 const SLIDE_DURATION = 8000; // 8 seconds per video
+
+const stats = [
+  { value: "150+", label: "Projects delivered" },
+  { value: "40+", label: "Brands served" },
+  { value: "8yr", label: "Of craft" },
+];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
@@ -90,7 +62,7 @@ const HeroSection = () => {
   }, [current]);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-background">
+    <section className="relative min-h-screen w-full overflow-hidden bg-background">
       {/* Video layers */}
       {videos.map((video, i) => (
         <AnimatePresence key={i}>
@@ -112,92 +84,136 @@ const HeroSection = () => {
                 className="w-full h-full object-cover"
               />
               {/* Dark overlay for text readability */}
-              <div className="absolute inset-0 bg-background/50" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              <div className="absolute inset-0 bg-background/60" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/20" />
             </motion.div>
           )}
         </AnimatePresence>
       ))}
 
       {/* Content overlay */}
-      <div className="relative z-10 flex flex-col justify-end h-full px-6 lg:px-16 pb-20 max-w-[1800px] mx-auto">
+      <div className="relative z-10 flex flex-col justify-end min-h-screen px-6 lg:px-16 pb-16 pt-36 max-w-[1400px] mx-auto">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex items-center gap-4 mb-6"
+          className="flex items-center gap-4 mb-8"
         >
-          <div className="w-12 h-px bg-primary" />
-          <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-            Latest Work
+          <div className="w-10 h-px bg-border" />
+          <span className="text-mono-label text-muted-foreground">
+            [01] &nbsp;Premium video production
           </span>
         </motion.div>
 
-        {/* Video title — animates on change */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h1 className="font-display text-[clamp(2.5rem,8vw,7rem)] font-extrabold leading-[0.9] uppercase text-foreground">
-              {videos[current].title}
-            </h1>
-            <p className="font-body text-sm md:text-base text-muted-foreground mt-4 tracking-wider uppercase">
-              {videos[current].subtitle}
-            </p>
-          </motion.div>
-        </AnimatePresence>
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-[clamp(2.75rem,7vw,6.5rem)] font-semibold leading-[1.02] tracking-tight text-foreground max-w-5xl"
+        >
+          We craft <span className="text-serif-italic text-primary glow-accent">stories</span>
+          <br />
+          for ambitious brands.
+        </motion.h1>
 
-        {/* Bottom bar: progress indicators + scroll CTA */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="font-body text-base md:text-lg text-muted-foreground mt-6 max-w-xl leading-relaxed"
+        >
+          Commercials, films and social-first content. Strategy, production
+          and post from one curated network.
+        </motion.p>
+
+        {/* CTA row */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex flex-wrap items-center gap-8 mt-10"
+        >
+          <a
+            href="#categories"
+            className="shiny-cta group flex items-center text-sm font-semibold tracking-[0.06em] uppercase px-7 py-4"
+          >
+            <span>
+              Start a project
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+          </a>
+          <a
+            href="#work"
+            className="text-mono-label text-muted-foreground hover:text-primary transition-colors duration-300 underline-offset-8 hover:underline"
+          >
+            Selected work ↓
+          </a>
+        </motion.div>
+
+        {/* Bottom bar: stats + video switcher */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex items-end justify-between mt-12 pt-8 border-t border-border"
+          transition={{ duration: 0.8, delay: 1 }}
+          className="flex flex-wrap items-end justify-between gap-8 mt-16 pt-8 border-t border-border/70"
         >
-          {/* Video progress indicators */}
-          <div className="flex items-center gap-1.5 sm:gap-3 flex-wrap">
-            {videos.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className="group flex flex-col items-start gap-2 cursor-pointer"
-                aria-label={`Go to video ${i + 1}`}
-              >
-                <span className={`text-xs font-body tracking-widest transition-colors duration-300 ${
-                  i === current ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                }`}>
-                  {String(i + 1).padStart(2, "0")}
+          {/* Stats */}
+          <div className="flex flex-wrap items-center gap-6 sm:gap-10">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col gap-1">
+                <span className="font-display text-2xl md:text-3xl font-semibold text-foreground">
+                  {stat.value}
                 </span>
-                <div className="w-8 sm:w-16 md:w-24 h-[2px] bg-border overflow-hidden rounded-full">
-                  <div
-                    className="h-full bg-primary transition-none"
-                    style={{
-                      width: i === current ? `${progress * 100}%` : i < current ? "100%" : "0%",
-                    }}
-                  />
-                </div>
-              </button>
+                <span className="text-mono-label text-muted-foreground/80 text-[0.65rem]">
+                  {stat.label}
+                </span>
+              </div>
             ))}
           </div>
 
-          <a
-            href="#work"
-            className="hidden md:flex items-center gap-3 text-xs font-body font-medium tracking-[0.2em] uppercase text-foreground group"
-          >
-            <span className="group-hover:text-primary transition-colors duration-300">
-              Scroll to explore
-            </span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="w-px h-8 bg-primary"
-            />
-          </a>
+          {/* Video progress indicators */}
+          <div className="flex flex-col items-start gap-3">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={current}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4 }}
+                className="text-mono-label text-muted-foreground"
+              >
+                {videos[current].title} · {videos[current].subtitle}
+              </motion.span>
+            </AnimatePresence>
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+              {videos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className="group flex flex-col items-start gap-2 cursor-pointer"
+                  aria-label={`Go to video ${i + 1}`}
+                >
+                  <span
+                    className={`font-mono text-[0.65rem] tracking-widest transition-colors duration-300 ${
+                      i === current ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="w-8 sm:w-12 md:w-16 h-[2px] bg-border overflow-hidden rounded-full">
+                    <div
+                      className="h-full bg-primary transition-none"
+                      style={{
+                        width: i === current ? `${progress * 100}%` : i < current ? "100%" : "0%",
+                      }}
+                    />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

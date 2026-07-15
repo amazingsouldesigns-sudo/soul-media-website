@@ -8,16 +8,16 @@ import BookingForm from "@/components/BookingForm";
 import { CATEGORIES } from "@/components/CategoriesSection";
 import { CONTACT, buildWhatsAppUrl, buildMailtoUrl } from "@/lib/contact";
 import { CATEGORY_REELS } from "@/lib/categoryReels";
-import krispyKreme from "@/assets/brands/krispy-kreme.svg.asset.json";
-import pizzaHut from "@/assets/brands/pizza-hut.svg.asset.json";
-import sprite from "@/assets/brands/sprite.svg.asset.json";
-import redbull from "@/assets/brands/redbull.svg.asset.json";
+import krispyKreme from "@/assets/brands/krispy-kreme.svg";
+import pizzaHut from "@/assets/brands/pizza-hut.svg";
+import sprite from "@/assets/brands/sprite.svg";
+import redbull from "@/assets/brands/redbull.svg";
 
-const TRUST_LOGOS = [krispyKreme.url, pizzaHut.url, sprite.url, redbull.url];
+const TRUST_LOGOS = [krispyKreme, pizzaHut, sprite, redbull];
 
 const TRUST_QUOTES: Record<string, { quote: string; attribution: string }> = {
   ads: { quote: "They turned our launch into appointment viewing.", attribution: "Brand Marketing Lead, F&B" },
-  entertainment: { quote: "Cinematic — exactly the energy the record needed.", attribution: "Independent Artist" },
+  entertainment: { quote: "Cinematic. Exactly the energy the record needed.", attribution: "Independent Artist" },
   corporate: { quote: "The kind of film our exec team actually wants to share.", attribution: "Head of Comms" },
   weddings: { quote: "We've watched the film a hundred times and still cry.", attribution: "Newlywed Client" },
   lifestyle: { quote: "Hit every spec, then handed us extras we didn't ask for.", attribution: "Social Director" },
@@ -56,7 +56,7 @@ const OVERVIEWS: Record<string, { hero: string; body: string; bullets: string[] 
   },
   weddings: {
     hero: "Cinematic love stories, told properly",
-    body: "Documentary-meets-cinema wedding films and full-day photo coverage. We shoot the day as it unfolds — no posed cheese, no formula.",
+    body: "Documentary-meets-cinema wedding films and full-day photo coverage. We shoot the day as it unfolds. No posed cheese, no formula.",
     bullets: [
       "Full-day cinematic coverage",
       "Same-day social teaser (optional)",
@@ -77,13 +77,13 @@ const OVERVIEWS: Record<string, { hero: string; body: string; bullets: string[] 
 };
 
 const HOW_IT_WORKS = [
-  { step: "01", title: "Tell us about the project", body: "Three quick steps in the form below — should take under two minutes." },
+  { step: "01", title: "Tell us about the project", body: "Three quick steps in the form below. It takes under two minutes." },
   { step: "02", title: "Tailored quote in 24h", body: "We come back with scope, crew, and pricing built around your brief." },
   { step: "03", title: "Confirm and shoot", body: "You confirm, we plan, the team shows up ready. Edits delivered on schedule." },
 ];
 
 /**
- * LazyReelVideo — mounts the <video> element only when scrolled near the viewport.
+ * LazyReelVideo - mounts the <video> element only when scrolled near the viewport.
  * Pauses when offscreen to save CPU and mobile data.
  */
 const LazyReelVideo = ({ src, label }: { src: string; label: string }) => {
@@ -125,7 +125,7 @@ const LazyReelVideo = ({ src, label }: { src: string; label: string }) => {
   return (
     <div
       ref={wrapRef}
-      className="relative aspect-video bg-card border border-border overflow-hidden group"
+      className="relative aspect-video rounded-2xl bg-card border border-border overflow-hidden group"
     >
       {shouldLoad ? (
         <video
@@ -142,7 +142,7 @@ const LazyReelVideo = ({ src, label }: { src: string; label: string }) => {
         <div className="absolute inset-0 bg-gradient-to-br from-secondary/50 to-transparent" />
       )}
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-background/90 to-transparent pointer-events-none">
-        <p className="text-xs font-body tracking-[0.3em] uppercase text-foreground">{label}</p>
+        <p className="text-mono-label text-foreground text-[0.65rem]">{label}</p>
       </div>
     </div>
   );
@@ -155,7 +155,7 @@ const CategoryPage = () => {
 
   useEffect(() => {
     if (category) {
-      document.title = `${category.title} — SOULS Media Group`;
+      document.title = `${category.title} | SOULS Media Group`;
       const desc = document.querySelector('meta[name="description"]');
       if (desc) {
         desc.setAttribute(
@@ -182,7 +182,7 @@ const CategoryPage = () => {
   const overview = OVERVIEWS[category.slug];
   const quote = TRUST_QUOTES[category.slug];
   const waMessage = `Hi SOULS Media Group, I'd like to enquire about a ${category.title} project.`;
-  const emailSubject = `${category.title} enquiry — SOULS Media Group`;
+  const emailSubject = `${category.title} enquiry - SOULS Media Group`;
 
   return (
     <div className="min-h-screen bg-background film-grain">
@@ -190,10 +190,10 @@ const CategoryPage = () => {
 
       {/* Hero */}
       <section className="pt-32 pb-20 lg:pt-40 lg:pb-28 border-b border-border">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <Link
             to="/#categories"
-            className="inline-flex items-center gap-2 text-xs font-body tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300 mb-12"
+            className="inline-flex items-center gap-2 text-mono-label text-muted-foreground hover:text-primary transition-colors duration-300 mb-12"
           >
             <ArrowLeft className="w-3 h-3" /> All categories
           </Link>
@@ -204,13 +204,13 @@ const CategoryPage = () => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-                {category.number} — {category.tagline}
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
+                [{category.number}] &nbsp;{category.tagline}
               </span>
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold uppercase text-foreground leading-[0.95] break-words [word-break:break-word]">
-              {category.title}
+            <h1 className="font-display text-[clamp(2.75rem,8vw,6.5rem)] font-semibold tracking-tight text-foreground leading-[1.02] break-words [word-break:break-word]">
+              {category.title}<span className="text-serif-italic text-primary">.</span>
             </h1>
             <p className="mt-8 text-lg md:text-2xl font-body text-muted-foreground max-w-3xl leading-relaxed">
               {overview.hero}
@@ -219,13 +219,13 @@ const CategoryPage = () => {
             <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="#enquire"
-                className="inline-flex items-center gap-2 text-xs font-body font-bold tracking-[0.25em] uppercase bg-primary text-primary-foreground px-7 py-3 hover:bg-primary/80 transition-all duration-300"
+                className="shiny-cta inline-flex items-center text-xs font-semibold tracking-[0.08em] uppercase px-7 py-3.5"
               >
-                Start your enquiry →
+                <span>Start your enquiry →</span>
               </a>
               <a
                 href="#reels"
-                className="inline-flex items-center gap-2 text-xs font-body font-medium tracking-[0.25em] uppercase border border-border text-foreground px-7 py-3 hover:border-primary hover:text-primary transition-all duration-300"
+                className="inline-flex items-center gap-2 rounded-full text-xs font-body font-medium tracking-[0.1em] uppercase border border-border text-foreground px-7 py-3.5 hover:border-primary hover:text-primary transition-all duration-300"
               >
                 View reels
               </a>
@@ -236,11 +236,11 @@ const CategoryPage = () => {
 
       {/* Reels */}
       <section id="reels" className="py-20 lg:py-28 border-b border-border">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-8 h-px bg-primary" />
-            <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-              Featured Reels
+            <div className="w-10 h-px bg-border" />
+            <span className="text-mono-label text-muted-foreground">
+              Featured reels
             </span>
           </div>
 
@@ -254,7 +254,7 @@ const CategoryPage = () => {
                 {Array.from({ length: placeholders }).map((_, i) => (
                   <div
                     key={`ph-${i}`}
-                    className="relative aspect-video bg-card border border-border overflow-hidden flex items-center justify-center"
+                    className="relative aspect-video rounded-2xl bg-card border border-border overflow-hidden flex items-center justify-center"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-secondary/50 to-transparent" />
                     <div className="relative z-10 text-center p-6">
@@ -262,8 +262,8 @@ const CategoryPage = () => {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
                       </span>
-                      <p className="text-xs font-body tracking-[0.3em] uppercase text-muted-foreground">
-                        Reel {String(reels.length + i + 1).padStart(2, "0")} — coming soon
+                      <p className="text-mono-label text-muted-foreground text-[0.65rem]">
+                        Reel {String(reels.length + i + 1).padStart(2, "0")} · coming soon
                       </p>
                     </div>
                   </div>
@@ -276,11 +276,11 @@ const CategoryPage = () => {
 
       {/* Social proof */}
       <section className="py-16 lg:py-20 border-b border-border bg-card/30">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
                 Trusted by
               </span>
             </div>
@@ -298,11 +298,11 @@ const CategoryPage = () => {
           </div>
           {quote && (
             <blockquote className="lg:col-span-7 lg:border-l lg:border-border lg:pl-12">
-              <p className="font-display text-2xl md:text-3xl font-bold text-foreground leading-snug">
+              <p className="font-display text-2xl md:text-3xl font-semibold tracking-tight text-foreground leading-snug">
                 "{quote.quote}"
               </p>
-              <footer className="mt-4 text-xs font-body tracking-[0.3em] uppercase text-muted-foreground">
-                — {quote.attribution}
+              <footer className="mt-4 text-mono-label text-muted-foreground text-[0.65rem]">
+                {quote.attribution}
               </footer>
             </blockquote>
           )}
@@ -311,16 +311,18 @@ const CategoryPage = () => {
 
       {/* Overview */}
       <section className="py-20 lg:py-28 border-b border-border">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-5">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
                 What we do
               </span>
             </div>
-            <h2 className="font-display text-3xl md:text-5xl font-extrabold uppercase text-foreground leading-tight">
-              Built around your brief
+            <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
+              Built around
+              <br />
+              your <span className="text-serif-italic text-primary">brief</span>.
             </h2>
           </div>
           <div className="lg:col-span-7">
@@ -341,19 +343,19 @@ const CategoryPage = () => {
 
       {/* How it works */}
       <section className="py-16 lg:py-24 border-b border-border bg-card/30">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <div className="flex items-center gap-4 mb-10">
-            <div className="w-8 h-px bg-primary" />
-            <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
+            <div className="w-10 h-px bg-border" />
+            <span className="text-mono-label text-muted-foreground">
               How it works
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {HOW_IT_WORKS.map((s) => (
-              <div key={s.step} className="border border-border p-8 bg-background relative">
+              <div key={s.step} className="rounded-2xl border border-border p-8 bg-background relative hover:border-primary/40 transition-colors duration-500">
                 <CheckCircle2 className="absolute top-6 right-6 w-5 h-5 text-primary/40" />
-                <span className="font-body text-xs tracking-[0.4em] text-primary">{s.step}</span>
-                <h3 className="font-display text-xl md:text-2xl font-bold text-foreground uppercase mt-3 mb-2 leading-tight">
+                <span className="font-mono text-xs tracking-[0.2em] text-primary">{s.step}</span>
+                <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight text-foreground mt-3 mb-2 leading-tight">
                   {s.title}
                 </h3>
                 <p className="text-sm font-body text-muted-foreground leading-relaxed">{s.body}</p>
@@ -365,16 +367,18 @@ const CategoryPage = () => {
 
       {/* Booking form */}
       <section id="enquire" className="py-20 lg:py-28 border-b border-border scroll-mt-24">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
                 Book / Enquire
               </span>
             </div>
-            <h2 className="font-display text-3xl md:text-4xl xl:text-5xl font-extrabold uppercase text-foreground leading-[1.05] break-words [word-break:break-word] mb-6">
-              Start your {category.title.toLowerCase()} project
+            <h2 className="font-display text-[clamp(1.9rem,3.5vw,3rem)] font-semibold tracking-tight text-foreground leading-[1.05] break-words [word-break:break-word] mb-6">
+              Start your{" "}
+              <span className="text-serif-italic text-primary">{category.title.toLowerCase()}</span>{" "}
+              project.
             </h2>
             <p className="text-sm font-body text-muted-foreground leading-relaxed">
               Tell us what you're building. We'll come back within 24 hours with a scope and quote.
@@ -388,10 +392,10 @@ const CategoryPage = () => {
 
       {/* Conversion options */}
       <section className="py-20 lg:py-28">
-        <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-8 h-px bg-primary" />
-            <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
+            <div className="w-10 h-px bg-border" />
+            <span className="text-mono-label text-muted-foreground">
               Or reach out directly
             </span>
           </div>
@@ -439,15 +443,15 @@ const ContactCard = ({
 }) => {
   const content = (
     <div
-      className={`group h-full border border-border bg-card p-8 transition-all duration-500 ${
+      className={`group h-full rounded-2xl border border-border bg-card p-8 transition-all duration-500 ${
         disabled ? "opacity-50" : "hover:border-primary hover:bg-primary/5 cursor-pointer"
       }`}
     >
       <div className="flex items-center gap-3 text-primary mb-6">
         {icon}
-        <span className="text-xs font-body font-medium tracking-[0.3em] uppercase">{label}</span>
+        <span className="text-mono-label text-[0.65rem]">{label}</span>
       </div>
-      <div className="font-display text-lg lg:text-xl font-bold uppercase text-foreground group-hover:text-primary transition-colors duration-300 break-all leading-tight">
+      <div className="font-display text-lg lg:text-xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300 break-all leading-tight">
         {value}
       </div>
     </div>

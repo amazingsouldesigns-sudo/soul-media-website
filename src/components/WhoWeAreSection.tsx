@@ -1,4 +1,5 @@
 import { motion, useInView } from "framer-motion";
+import RevealHeading from "@/components/RevealHeading";
 import { useRef } from "react";
 import { Camera, Video, Palette, Code2, Megaphone, Building2, Smartphone } from "lucide-react";
 
@@ -17,32 +18,30 @@ const WhoWeAreSection = () => {
 
   return (
     <section id="who-we-are" className="py-24 md:py-32 lg:py-44 border-t border-border">
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
           {/* Left - heading */}
           <motion.div
             ref={ref}
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5"
           >
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-                Who We Are
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
+                [02] &nbsp;Who we are
               </span>
             </div>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase text-foreground leading-[0.95]">
-              A Network
+            <RevealHeading className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
+              A network built
               <br />
-              <span className="text-stroke">Built to</span>
-              <br />
-              Deliver.
-            </h2>
-            <div className="mt-8 inline-flex items-center gap-3 px-4 py-2 border border-border bg-card/40">
+              to <span className="text-serif-italic text-primary">deliver</span>.
+            </RevealHeading>
+            <div className="mt-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-border bg-card/40">
               <Building2 className="w-4 h-4 text-primary" />
-              <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+              <span className="text-mono-label text-muted-foreground text-[0.65rem]">
                 Registered LLC
               </span>
             </div>
@@ -52,13 +51,13 @@ const WhoWeAreSection = () => {
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7"
           >
             <p className="font-body text-base md:text-lg leading-relaxed text-secondary-foreground mb-6">
               SOULS Media Group is a registered LLC operating through a curated
               network of trusted creative suppliers. We assemble the right team
-              for the right brief — fast, focused, and uncompromising on craft.
+              for the right brief: fast, focused, and uncompromising on craft.
             </p>
             <p className="font-body text-sm md:text-base leading-relaxed text-muted-foreground mb-10">
               Every engagement is tailored. Whether you need a single specialist
@@ -67,7 +66,7 @@ const WhoWeAreSection = () => {
             </p>
 
             {/* Supplier grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div className="flex flex-wrap gap-3">
               {suppliers.map((s, i) => {
                 const Icon = s.icon;
                 return (
@@ -76,10 +75,10 @@ const WhoWeAreSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.3 + i * 0.08 }}
-                    className="group flex items-center gap-3 p-4 border border-border bg-card/30 hover:bg-card/60 hover:border-primary/40 transition-all duration-300"
+                    className="group flex items-center gap-3 px-5 py-3 rounded-full border border-border bg-card/30 hover:bg-card/60 hover:border-primary/50 transition-all duration-300"
                   >
                     <Icon className="w-4 h-4 text-primary flex-shrink-0" />
-                    <span className="font-body text-xs md:text-sm tracking-wide text-foreground">
+                    <span className="text-mono-label text-foreground/90 text-[0.65rem]">
                       {s.label}
                     </span>
                   </motion.div>
@@ -89,7 +88,7 @@ const WhoWeAreSection = () => {
 
             <div className="mt-10 flex items-center gap-6">
               <div className="w-12 h-px bg-primary" />
-              <p className="font-body text-[10px] md:text-xs tracking-[0.25em] uppercase text-muted-foreground">
+              <p className="text-mono-label text-muted-foreground text-[0.65rem]">
                 Tailored to any specialised category or client need.
               </p>
             </div>

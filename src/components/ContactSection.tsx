@@ -1,21 +1,23 @@
 import { motion, useInView } from "framer-motion";
+import RevealHeading from "@/components/RevealHeading";
 import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { buildMailtoUrl } from "@/lib/contact";
 
 const ContactSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="contact" className="py-32 lg:py-52 border-t border-border relative overflow-hidden">
+    <section id="contact" className="py-24 md:py-32 lg:py-52 border-t border-border relative overflow-hidden">
       {/* Giant background text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-        <span className="font-display text-[20vw] font-extrabold uppercase text-foreground/[0.03] whitespace-nowrap">
+        <span className="font-display text-[20vw] font-semibold tracking-tight uppercase text-foreground/[0.03] whitespace-nowrap">
           LET'S TALK
         </span>
       </div>
 
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16 relative z-10">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-16 relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -24,19 +26,18 @@ const ContactSection = () => {
           className="text-center"
         >
           <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="w-8 h-px bg-primary" />
-            <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-              Next Move
+            <div className="w-10 h-px bg-border" />
+            <span className="text-mono-label text-muted-foreground">
+              [07] &nbsp;Next move
             </span>
-            <div className="w-8 h-px bg-primary" />
+            <div className="w-10 h-px bg-border" />
           </div>
 
-          <h2 className="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold uppercase text-foreground leading-none">
-            Ready to Make
+          <RevealHeading className="font-display text-[clamp(2.75rem,7vw,6.5rem)] font-semibold tracking-tight text-foreground leading-[1.02]">
+            Ready to make
             <br />
-            <span className="text-stroke-accent">Something</span>{" "}
-            <span className="text-primary">Real</span>?
-          </h2>
+            something <span className="text-serif-italic text-primary glow-accent">real</span>?
+          </RevealHeading>
 
           <p className="mt-10 font-body text-base text-muted-foreground max-w-lg mx-auto">
             No pitch decks. No fluff. Just tell us what you're building
@@ -44,14 +45,16 @@ const ContactSection = () => {
           </p>
 
           <motion.a
-            href="mailto:hello@soulsmedia.com"
+            href={buildMailtoUrl("Project enquiry - SOULS Media Group", "Hi SOULS Media Group,")}
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="inline-flex items-center gap-3 mt-14 text-sm font-body font-semibold tracking-[0.2em] uppercase bg-primary text-primary-foreground px-14 py-5 hover:bg-primary/80 transition-all duration-300 group"
+            className="shiny-cta inline-flex items-center mt-14 text-sm font-body font-semibold tracking-[0.08em] uppercase px-12 py-5 group"
           >
-            Start a Project
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <span>
+              Start a Project
+              <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
           </motion.a>
         </motion.div>
       </div>

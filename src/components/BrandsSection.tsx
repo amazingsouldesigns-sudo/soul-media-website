@@ -1,13 +1,14 @@
-import krispyKreme from "@/assets/brands/krispy-kreme.svg.asset.json";
-import pizzaHut from "@/assets/brands/pizza-hut.svg.asset.json";
-import sprite from "@/assets/brands/sprite.svg.asset.json";
-import redbull from "@/assets/brands/redbull.svg.asset.json";
+import RevealHeading from "@/components/RevealHeading";
+import krispyKreme from "@/assets/brands/krispy-kreme.svg";
+import pizzaHut from "@/assets/brands/pizza-hut.svg";
+import sprite from "@/assets/brands/sprite.svg";
+import redbull from "@/assets/brands/redbull.svg";
 
 const brands = [
-  { name: "Krispy Kreme", logo: krispyKreme.url },
-  { name: "Pizza Hut", logo: pizzaHut.url },
-  { name: "Sprite", logo: sprite.url },
-  { name: "Red Bull", logo: redbull.url },
+  { name: "Krispy Kreme", logo: krispyKreme },
+  { name: "Pizza Hut", logo: pizzaHut },
+  { name: "Sprite", logo: sprite },
+  { name: "Red Bull", logo: redbull },
 ];
 
 const BrandsSection = () => {
@@ -16,22 +17,22 @@ const BrandsSection = () => {
 
   return (
     <section id="brands" className="py-20 md:py-28 border-t border-border bg-background overflow-hidden">
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16 mb-12 md:mb-16">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-16 mb-12 md:mb-16">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-                Experience
+              <div className="w-10 h-px bg-border" />
+              <span className="text-mono-label text-muted-foreground">
+                [06] &nbsp;Experience
               </span>
             </div>
-            <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-extrabold uppercase text-foreground leading-[0.95]">
-              Brands We've
+            <RevealHeading className="font-display text-[clamp(2.25rem,5vw,4.5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
+              Brands we've
               <br />
-              <span className="text-stroke">Worked With</span>
-            </h2>
+              worked <span className="text-serif-italic text-primary">with</span>.
+            </RevealHeading>
           </div>
-          <p className="font-body text-xs md:text-sm tracking-[0.2em] uppercase text-muted-foreground max-w-xs">
+          <p className="text-mono-label text-muted-foreground text-[0.65rem] max-w-xs leading-relaxed">
             Trusted by world-class names across food, beverage and lifestyle.
           </p>
         </div>

@@ -1,5 +1,5 @@
 const MarqueeSection = () => {
-  const text = "COMMERCIAL — EVENTS — BRAND CAMPAIGNS — SOCIAL MEDIA — PHOTOGRAPHY — CINEMATIC — ";
+  const text = "COMMERCIAL · EVENTS · BRAND CAMPAIGNS · SOCIAL MEDIA · PHOTOGRAPHY · CINEMATIC · ";
 
   return (
     <div className="py-8 border-y border-border overflow-hidden bg-background">
@@ -7,7 +7,7 @@ const MarqueeSection = () => {
         {[...Array(4)].map((_, i) => (
           <span
             key={i}
-            className="font-display text-6xl md:text-8xl font-extrabold uppercase text-foreground/[0.06] mx-4 flex-shrink-0"
+            className="font-display text-6xl md:text-8xl font-semibold tracking-tight uppercase text-foreground/[0.06] mx-4 flex-shrink-0"
           >
             {text}
           </span>

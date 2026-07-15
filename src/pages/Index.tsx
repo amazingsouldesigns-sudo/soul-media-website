@@ -7,6 +7,7 @@ import WhoWeAreSection from "@/components/WhoWeAreSection";
 import AboutSection from "@/components/AboutSection";
 import BrandsSection from "@/components/BrandsSection";
 import ContactSection from "@/components/ContactSection";
+import FloatingContact from "@/components/FloatingContact";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -22,6 +23,7 @@ const Index = () => {
       <BrandsSection />
       <ContactSection />
       <Footer />
+      <FloatingContact />
     </div>
   );
 };

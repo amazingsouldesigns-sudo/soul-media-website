@@ -1,8 +1,9 @@
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CATEGORY_REELS } from "@/lib/categoryReels";
-
+import TextRoll from "@/components/TextRoll";
+import RevealHeading from "@/components/RevealHeading";
 
 export const CATEGORIES = [
   {
@@ -45,178 +46,169 @@ export const CATEGORIES = [
 const CategoriesSection = () => {
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  // Cursor-following preview position
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 200, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 200, damping: 25 });
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
+  };
+
+  const hoveredReels = hovered ? CATEGORY_REELS[hovered] ?? [] : [];
 
   return (
-    <section id="categories" className="py-32 lg:py-44 border-t border-border bg-background">
-      <div className="max-w-[1800px] mx-auto px-6 lg:px-16">
+    <section id="categories" className="relative py-24 md:py-32 lg:py-44 border-t border-border bg-background">
+      <div id="work" className="absolute -top-24" aria-hidden="true" />
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
         <motion.div
           ref={headerRef}
           initial={{ opacity: 0 }}
           animate={headerInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-20"
+          className="mb-16 lg:mb-20"
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-8 h-px bg-primary" />
-            <span className="text-xs font-body font-medium tracking-[0.4em] uppercase text-primary">
-              Browse Work
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-10 h-px bg-border" />
+            <span className="text-mono-label text-muted-foreground">
+              [03] &nbsp;Selected work / Browse categories
             </span>
           </div>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold uppercase text-foreground leading-none max-w-4xl">
-            Choose Your <span className="text-stroke">Category</span>
-          </h2>
-          <p className="mt-6 max-w-2xl text-muted-foreground font-body text-base md:text-lg">
+          <RevealHeading className="font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
+            Choose your <span className="text-serif-italic text-primary">world</span>.
+          </RevealHeading>
+          <p className="mt-6 max-w-xl text-muted-foreground font-body text-base md:text-lg leading-relaxed">
             Five worlds. One studio. Pick a category to preview reels and book your project.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {/* Numbered work list */}
+        <div onMouseMove={onMouseMove} onMouseLeave={() => setHovered(null)}>
           {CATEGORIES.map((cat, i) => (
-            <CategoryCard key={cat.slug} category={cat} index={i} />
+            <WorkRow
+              key={cat.slug}
+              category={cat}
+              index={i}
+              hovered={hovered === cat.slug}
+              anyHovered={hovered !== null}
+              onHover={(h) => setHovered(h ? cat.slug : null)}
+            />
           ))}
+          <div className="border-t border-border" />
         </div>
       </div>
+
+      {/* Cursor-following video preview (desktop only) */}
+      <AnimatePresence>
+        {hovered && hoveredReels.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ left: springX, top: springY, x: "-50%", y: "-110%" }}
+            className="pointer-events-none fixed z-40 hidden md:block w-[22rem] aspect-video overflow-hidden rounded-2xl border border-border shadow-2xl shadow-primary/10"
+          >
+            <video
+              key={hoveredReels[0].src}
+              src={hoveredReels[0].src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full w-full object-cover"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
 
-const CategoryCard = ({
+const WorkRow = ({
   category,
   index,
+  hovered,
+  anyHovered,
+  onHover,
 }: {
   category: typeof CATEGORIES[number];
   index: number;
+  hovered: boolean;
+  anyHovered: boolean;
+  onHover: (hovering: boolean) => void;
 }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
-  const reels = CATEGORY_REELS[category.slug] ?? [];
-  const [activeIdx, setActiveIdx] = useState(0);
-
-  useEffect(() => {
-    if (reels.length <= 1) return;
-    const id = setInterval(() => {
-      setActiveIdx((i) => (i + 1) % reels.length);
-    }, 5000);
-    return () => clearInterval(id);
-  }, [reels.length]);
-
-  const hasReels = reels.length > 0;
+  const hasReels = (CATEGORY_REELS[category.slug] ?? []).length > 0;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
     >
       <Link
         to={`/services/${category.slug}`}
-        className="group relative block aspect-[4/5] overflow-hidden bg-card border border-border hover:border-primary transition-all duration-500"
+        onMouseEnter={() => onHover(true)}
+        onMouseLeave={() => onHover(false)}
+        className={`group roll-trigger relative grid grid-cols-[2.5rem_1fr_auto] lg:grid-cols-[4rem_1fr_16rem_7rem_3rem] items-center gap-4 lg:gap-8 border-t border-border py-8 lg:py-10 transition-opacity duration-300 ${
+          anyHovered && !hovered ? "opacity-35" : "opacity-100"
+        }`}
       >
-        {/* Slideshow background */}
-        {hasReels ? (
-          <>
-            <AnimatePresence mode="sync">
-              <motion.video
-                key={reels[activeIdx].src}
-                src={reels[activeIdx].src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </AnimatePresence>
-            {/* Darkening overlay for legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30 group-hover:via-background/50 group-hover:to-background/10 transition-colors duration-500" />
-          </>
-        ) : (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary via-card to-background" />
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent" />
-          </>
-        )}
-
-        {/* Indicator */}
-        <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-          </span>
-          <span className="text-[10px] font-body tracking-[0.3em] uppercase text-foreground/80">
-            {hasReels ? "Live reel" : "Reels soon"}
-          </span>
-        </div>
-
-        {/* Number */}
-        <span className="absolute top-6 left-6 font-body text-xs text-primary tracking-widest z-10">
+        <span
+          className={`font-mono text-sm transition-colors duration-300 ${
+            hovered ? "text-primary" : "text-muted-foreground/60"
+          }`}
+        >
           {category.number}
         </span>
 
-        {/* Slideshow progress dots */}
-        {reels.length > 1 && (
-          <div className="absolute top-16 right-6 flex flex-col gap-1.5 z-10">
-            {reels.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1.5 w-1.5 rounded-full transition-all duration-500 ${
-                  i === activeIdx ? "bg-primary w-3" : "bg-foreground/30"
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Bottom content */}
-        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-8 z-10">
-          <h3 className="font-display text-lg sm:text-xl lg:text-3xl xl:text-4xl font-extrabold uppercase text-foreground group-hover:text-primary transition-colors duration-500 leading-[0.95]">
-            {category.title}
+        <div className="min-w-0">
+          <h3
+            className={`font-display text-[clamp(1.75rem,4vw,3.25rem)] font-semibold tracking-tight leading-none text-foreground transition-transform duration-300 ${
+              hovered ? "translate-x-2" : ""
+            }`}
+          >
+            <TextRoll text={category.title} />
           </h3>
-          <p className="mt-2 text-xs font-body tracking-[0.2em] uppercase text-muted-foreground">
+          <p className="lg:hidden mt-2 text-mono-label text-muted-foreground/80 text-[0.65rem]">
             {category.tagline}
           </p>
-          <p className="mt-4 text-sm font-body text-muted-foreground/80 leading-relaxed line-clamp-2">
-            {category.description}
-          </p>
-
-          <div className="mt-6 flex items-center justify-between border-t border-border pt-4 group-hover:border-primary/40 transition-colors duration-500">
-            <span className="text-xs font-body font-medium tracking-[0.3em] uppercase text-foreground">
-              Explore & Book
-            </span>
-            <span className="font-body text-primary text-xl translate-x-0 group-hover:translate-x-1 transition-transform duration-300">
-              →
-            </span>
-          </div>
         </div>
 
-        {/* Quick action: jump straight to enquire form */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.href = `/services/${category.slug}#enquire`;
-          }}
-          className="absolute bottom-4 right-4 z-20 text-[10px] font-body font-bold tracking-[0.25em] uppercase bg-primary/90 text-primary-foreground px-3 py-2 opacity-0 group-hover:opacity-100 hover:bg-primary transition-all duration-300"
-        >
-          Enquire →
-        </button>
+        <span className="hidden lg:block text-mono-label text-muted-foreground text-[0.68rem]">
+          {category.tagline}
+        </span>
 
-        {/* Scanline */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none z-10"
-          style={{
-            backgroundImage: "repeating-linear-gradient(0deg, transparent 0, transparent 2px, hsl(var(--primary) / 0.1) 2px, hsl(var(--primary) / 0.1) 3px)",
-          }}
-        />
+        <span className="hidden lg:flex items-center gap-2">
+          <span className="relative flex h-1.5 w-1.5">
+            {hasReels && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+            )}
+            <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${hasReels ? "bg-primary" : "bg-muted-foreground/40"}`} />
+          </span>
+          <span className="text-mono-label text-muted-foreground/70 text-[0.6rem]">
+            {hasReels ? "Live reel" : "Soon"}
+          </span>
+        </span>
+
+        <span
+          className={`justify-self-end font-body text-2xl transition-all duration-300 ${
+            hovered ? "text-primary -translate-y-1 translate-x-1" : "text-muted-foreground/50"
+          }`}
+        >
+          ↗
+        </span>
       </Link>
     </motion.div>
   );
 };
-
 
 export default CategoriesSection;

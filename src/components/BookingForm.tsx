@@ -42,17 +42,17 @@ const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 
 interface FormState {
-  // Step 1 — Project
+  // Step 1 - Project
   project_type: string;
   budget_range: string;
   deliverables: string[];
-  // Step 2 — Logistics
+  // Step 2 - Logistics
   preferred_date: string; // ISO yyyy-mm-dd or "" if flexible
   flexible_date: boolean;
   hours_required: string;
   num_shooters: string;
   additional_requirements: string;
-  // Step 3 — Contact
+  // Step 3 - Contact
   name: string;
   email: string;
   phone: string;
@@ -116,7 +116,15 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(draftKey);
-      if (raw) setValues({ ...initial, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setValues({
+          ...initial,
+          ...parsed,
+          // Guard against corrupted drafts so array fields never break rendering
+          deliverables: Array.isArray(parsed?.deliverables) ? parsed.deliverables : [],
+        });
+      }
     } catch {
       /* ignore */
     }
@@ -292,7 +300,7 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         className="border border-primary/40 bg-primary/5 p-10 text-center"
       >
-        <div className="font-display text-3xl font-bold uppercase text-foreground mb-3">
+        <div className="font-display text-3xl font-semibold tracking-tight text-foreground mb-3">
           Enquiry Received
         </div>
         {referenceCode && (
@@ -325,7 +333,7 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
             <div key={label} className="flex items-center gap-2">
               <div
                 className={cn(
-                  "w-6 h-6 flex items-center justify-center border text-[10px] font-body font-bold transition-colors",
+                  "w-6 h-6 flex items-center justify-center rounded-full border text-[10px] font-mono font-medium transition-colors",
                   i < step
                     ? "bg-primary border-primary text-primary-foreground"
                     : i === step
@@ -415,13 +423,23 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
                       type="button"
                       key={opt}
                       onClick={() => toggleDeliverable(opt)}
+                      aria-pressed={checked}
                       className={`flex items-center gap-3 border px-4 py-3 text-left transition-all duration-200 ${
                         checked
                           ? "border-primary bg-primary/10 text-foreground"
                           : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
                       }`}
                     >
-                      <Checkbox checked={checked} className="pointer-events-none" />
+                      <span
+                        className={cn(
+                          "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors",
+                          checked
+                            ? "bg-primary border-primary text-primary-foreground"
+                            : "border-primary",
+                        )}
+                      >
+                        {checked && <Check className="h-3 w-3" />}
+                      </span>
                       <span className="text-sm font-body">{opt}</span>
                     </button>
                   );
@@ -509,7 +527,7 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
                 name="additional_requirements"
                 value={values.additional_requirements}
                 onChange={(e) => set("additional_requirements", e.target.value)}
-                placeholder="Venue, vibe, references, budget specifics — anything that helps us scope it right."
+                placeholder="Venue, vibe, references, budget specifics: anything that helps us scope it right."
                 rows={5}
               />
             </Field>
@@ -607,11 +625,11 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
               </p>
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                 <SummaryRow label="Category" value={categoryLabel} />
-                <SummaryRow label="Project" value={values.project_type || "—"} />
+                <SummaryRow label="Project" value={values.project_type || "-"} />
                 <SummaryRow
                   label="Budget"
                   value={
-                    BUDGET_OPTIONS.find((b) => b.value === values.budget_range)?.label || "—"
+                    BUDGET_OPTIONS.find((b) => b.value === values.budget_range)?.label || "-"
                   }
                 />
                 <SummaryRow
@@ -621,14 +639,14 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
                       ? "Flexible"
                       : values.preferred_date
                       ? format(new Date(values.preferred_date), "PPP")
-                      : "—"
+                      : "-"
                   }
                 />
-                <SummaryRow label="Hours" value={values.hours_required || "—"} />
-                <SummaryRow label="Shooters" value={values.num_shooters || "—"} />
+                <SummaryRow label="Hours" value={values.hours_required || "-"} />
+                <SummaryRow label="Shooters" value={values.num_shooters || "-"} />
                 <SummaryRow
                   label="Deliverables"
-                  value={values.deliverables.length ? values.deliverables.join(", ") : "—"}
+                  value={values.deliverables.length ? values.deliverables.join(", ") : "-"}
                   full
                 />
                 <SummaryRow label="Files" value={files.length ? `${files.length} attached` : "None"} />

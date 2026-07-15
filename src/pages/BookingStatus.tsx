@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Search, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoAsset from "@/assets/soul_logo_copy.png.asset.json";
+import { SOULS_LOGO_COPY } from "@/lib/logos";
 
 interface BookingRow {
   id: string;
@@ -28,7 +28,7 @@ const statusStyles: Record<string, string> = {
 };
 
 const statusCopy: Record<string, string> = {
-  confirmed: "Your booking is confirmed — we'll be in touch with next steps.",
+  confirmed: "Your booking is confirmed. We'll be in touch with next steps.",
   in_review: "Your booking is currently being reviewed by our team.",
   declined: "Unfortunately this booking could not be accepted.",
   new: "Received. Sitting in the queue for review.",
@@ -61,7 +61,7 @@ const BookingStatus = () => {
         <div className="max-w-3xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1 font-display text-lg font-extrabold uppercase text-foreground">
             <img 
-              src={logoAsset.url} 
+              src={SOULS_LOGO_COPY} 
               alt="S" 
               className="h-8 w-auto object-contain inline-block mr-1 brightness-110 hover:brightness-125 transition-all duration-300" 
             />
@@ -75,9 +75,9 @@ const BookingStatus = () => {
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-primary mb-3">Booking Status</p>
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-3">
-            Check your booking
+          <p className="text-mono-label text-muted-foreground mb-3">Booking status</p>
+          <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-3">
+            Check your <span className="text-serif-italic text-primary">booking</span>.
           </h1>
           <p className="text-muted-foreground font-body mb-10">
             Enter the email you used when submitting your enquiry.
@@ -118,12 +118,12 @@ const BookingStatus = () => {
                 <Card key={b.id} className="p-6 bg-card/40 backdrop-blur border-border">
                   <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.3em] text-primary">{b.category}</p>
+                      <p className="text-mono-label text-primary text-[0.6rem]">{b.category}</p>
                       <h2 className="font-display text-xl font-semibold text-foreground mt-1">
                         {b.project_type}
                       </h2>
                     </div>
-                    <span className={`text-[10px] uppercase tracking-widest px-2 py-1 border ${
+                    <span className={`text-mono-label text-[0.6rem] px-3 py-1 rounded-full border ${
                       statusStyles[b.status] ?? statusStyles.new
                     }`}>
                       {b.status.replace("_", " ")}
