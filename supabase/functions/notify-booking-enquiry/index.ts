@@ -13,7 +13,7 @@ import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
 const OWNER_EMAIL = "souldesignsphotos@proton.me";
 const SITE_NAME = "SOULS Media Group";
-const SITE_URL = "https://soulmediagroup.com"; // used in email footer links; update if domain differs
+const SITE_URL = "https://www.soulsmediagroup.com";
 
 interface EnquiryPayload {
   category?: string;
