@@ -11,7 +11,7 @@
 
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
 
-const OWNER_EMAIL = "souldesignsphotos@proton.me";
+const OWNER_EMAIL = Deno.env.get("OWNER_EMAIL") ?? "souldesignsphotos@proton.me";
 const SITE_NAME = "SOULS Media Group";
 const SITE_URL = "https://www.soulsmediagroup.com";
 
@@ -141,7 +141,7 @@ const sendEmail = async (
     if (!res.ok) {
       const text = await res.text();
       console.log(`Resend returned ${res.status}: ${text}`);
-      return { sent: false, reason: `api_${res.status}` };
+      return { sent: false, reason: `api_${res.status}: ${text.slice(0, 300)}` };
     }
     return { sent: true };
   } catch (err) {
