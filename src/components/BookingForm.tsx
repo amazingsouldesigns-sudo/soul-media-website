@@ -230,24 +230,21 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
     try {
       const attachment_urls = await uploadAttachments();
 
-      const { data, error } = await supabase
-        .from("booking_enquiries")
-        .insert({
-          category,
-          name: values.name,
-          email: values.email,
-          phone: values.phone || null,
-          project_type: values.project_type,
-          hours_required: values.hours_required || null,
-          num_shooters: values.num_shooters || null,
-          deliverables: values.deliverables.length ? values.deliverables : null,
-          additional_requirements: values.additional_requirements || null,
-          preferred_date: values.flexible_date ? null : values.preferred_date || null,
-          budget_range: values.budget_range || null,
-          attachment_urls: attachment_urls.length ? attachment_urls : null,
-        })
-        .select("id")
-        .single();
+      // No .select() after insert: anon can INSERT but has no SELECT RLS policy.
+      const { error } = await supabase.from("booking_enquiries").insert({
+        category,
+        name: values.name,
+        email: values.email,
+        phone: values.phone || null,
+        project_type: values.project_type,
+        hours_required: values.hours_required || null,
+        num_shooters: values.num_shooters || null,
+        deliverables: values.deliverables.length ? values.deliverables : null,
+        additional_requirements: values.additional_requirements || null,
+        preferred_date: values.flexible_date ? null : values.preferred_date || null,
+        budget_range: values.budget_range || null,
+        attachment_urls: attachment_urls.length ? attachment_urls : null,
+      });
 
       if (error) throw error;
 
@@ -263,7 +260,7 @@ const BookingForm = ({ category, categoryLabel }: Props) => {
         .catch(() => {});
 
       // Local-only reference (batch 2 will replace with server-generated SMG-YYYY-####)
-      const ref = `SMG-${new Date().getFullYear()}-${(data?.id ?? "").slice(0, 4).toUpperCase()}`;
+      const ref = `SMG-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
       setReferenceCode(ref);
 
       toast({ title: "Enquiry received", description: "We'll be in touch within 24 hours." });

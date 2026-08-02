@@ -11,6 +11,7 @@ import Auth from "./pages/Auth.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import BookingStatus from "./pages/BookingStatus.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { CategoryProvider } from "@/context/CategoryContext";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <CategoryProvider>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services/:slug" element={<CategoryPage />} />
@@ -31,6 +33,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </CategoryProvider>
       </BrowserRouter>
     </TooltipProvider>
     </MotionConfig>

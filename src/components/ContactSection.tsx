@@ -1,16 +1,17 @@
 import { motion, useInView } from "framer-motion";
 import RevealHeading from "@/components/RevealHeading";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
-import { buildMailtoUrl } from "@/lib/contact";
+import { useCategory } from "@/context/CategoryContext";
 
 const ContactSection = () => {
+  const { projectHref } = useCategory();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <section id="contact" className="py-24 md:py-32 lg:py-52 border-t border-border relative overflow-hidden">
-      {/* Giant background text */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
         <span className="font-display text-[20vw] font-semibold tracking-tight uppercase text-foreground/[0.03] whitespace-nowrap">
           LET'S TALK
@@ -44,18 +45,21 @@ const ContactSection = () => {
             and we'll show you how to make it unforgettable.
           </p>
 
-          <motion.a
-            href={buildMailtoUrl("Project enquiry - SOULS Media Group", "Hi SOULS Media Group,")}
+          <motion.div
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="shiny-cta inline-flex items-center mt-14 text-sm font-body font-semibold tracking-[0.08em] uppercase px-12 py-5 group"
           >
-            <span>
-              Start a Project
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </span>
-          </motion.a>
+            <Link
+              to={projectHref}
+              className="shiny-cta inline-flex items-center mt-14 text-sm font-body font-semibold tracking-[0.08em] uppercase px-12 py-5 group"
+            >
+              <span>
+                Start a Project
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -1,20 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, LogIn, LogOut, LayoutDashboard, Search, UserCircle } from "lucide-react";
+import { ArrowRight, LogIn, LogOut, LayoutDashboard, Search, UserCircle, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SOULS_LOGO } from "@/lib/logos";
+import { useCategory } from "@/context/CategoryContext";
+import { toast } from "@/hooks/use-toast";
 import TextRoll from "@/components/TextRoll";
 
 const navLinks = [
-  { label: "Capabilities", href: "#services" },
-  { label: "About Us", href: "#who-we-are" },
-  { label: "Brands", href: "#brands" },
-  { label: "Contact", href: "#contact" },
+  { label: "Capabilities", href: "/#services" },
+  { label: "About Us", href: "/#who-we-are" },
+  { label: "Brands", href: "/#brands" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { selectedCategory, projectHref, clearSelectedCategory } = useCategory();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>["data"]["session"]>(null);
@@ -45,7 +48,6 @@ const Navbar = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      // Defer Supabase call to avoid deadlock inside the callback
       setTimeout(() => checkAdmin(session?.user.id), 0);
     });
     return () => subscription.unsubscribe();
@@ -53,6 +55,26 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    setMenuOpen(false);
+    navigate("/");
+  };
+
+  const handleStartProject = (e: React.MouseEvent) => {
+    if (!selectedCategory) {
+      e.preventDefault();
+      setMenuOpen(false);
+      navigate("/");
+      toast({
+        title: "Choose a category first",
+        description: "Pick your world on the home screen to start a project.",
+      });
+      return;
+    }
+    setMenuOpen(false);
+  };
+
+  const handleChangeCategory = () => {
+    clearSelectedCategory();
     setMenuOpen(false);
     navigate("/");
   };
@@ -81,16 +103,16 @@ const Navbar = () => {
             />
           </Link>
 
-          <a
-            href="/#categories"
-            onClick={() => setMenuOpen(false)}
+          <Link
+            to={projectHref}
+            onClick={handleStartProject}
             className="shiny-cta group flex items-center whitespace-nowrap text-[0.65rem] sm:text-xs font-semibold tracking-[0.08em] uppercase px-4 sm:px-5 py-2.5"
           >
             <span>
               Start a Project
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
             </span>
-          </a>
+          </Link>
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -147,6 +169,13 @@ const Navbar = () => {
               transition={{ delay: 0.1 + navLinks.length * 0.07 }}
               className="mt-10 flex flex-col items-center gap-5"
             >
+              <button
+                type="button"
+                onClick={handleChangeCategory}
+                className="text-mono-label text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" /> Change category
+              </button>
               <Link
                 to="/booking-status"
                 onClick={() => setMenuOpen(false)}

@@ -1,14 +1,14 @@
 import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { CATEGORY_REELS } from "@/lib/categoryReels";
 import { CATEGORIES } from "@/lib/categories";
+import { useCategory } from "@/context/CategoryContext";
+import { SOULS_LOGO } from "@/lib/logos";
 import TextRoll from "@/components/TextRoll";
 import RevealHeading from "@/components/RevealHeading";
 
-export { CATEGORIES } from "@/lib/categories";
-
-const CategoriesSection = () => {
+const CategoryGate = () => {
+  const { setSelectedCategory } = useCategory();
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-100px" });
   const [hovered, setHovered] = useState<string | null>(null);
@@ -25,40 +25,53 @@ const CategoriesSection = () => {
 
   const hoveredReels = hovered ? CATEGORY_REELS[hovered] ?? [] : [];
 
+  const handleSelect = (slug: string) => {
+    setSelectedCategory(slug);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
   return (
-    <section id="categories" className="relative py-24 md:py-32 lg:py-44 border-t border-border bg-background">
-      <div id="work" className="absolute -top-24" aria-hidden="true" />
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
+    <div className="relative min-h-screen flex flex-col bg-background film-grain">
+      <div className="absolute top-6 left-6 lg:top-8 lg:left-8 z-10">
+        <img
+          src={SOULS_LOGO}
+          alt="SOULS Media Group"
+          className="h-9 sm:h-10 w-auto object-contain brightness-110"
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center max-w-[1400px] mx-auto w-full px-6 lg:px-16 py-24">
         <motion.div
           ref={headerRef}
-          initial={{ opacity: 0 }}
-          animate={headerInView ? { opacity: 1 } : {}}
+          initial={{ opacity: 0, y: 24 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="mb-16 lg:mb-20"
+          className="mb-12 lg:mb-16 text-center lg:text-left"
         >
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
             <div className="w-10 h-px bg-border" />
             <span className="text-mono-label text-muted-foreground">
-              [03] &nbsp;Selected work / Browse categories
+              [01] &nbsp;Welcome
             </span>
           </div>
           <RevealHeading className="font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight text-foreground leading-[1.05]">
             Choose your <span className="text-serif-italic text-primary">world</span>.
           </RevealHeading>
-          <p className="mt-6 max-w-xl text-muted-foreground font-body text-base md:text-lg leading-relaxed">
-            Five worlds. One studio. Pick a category to preview reels and book your project.
+          <p className="mt-6 max-w-xl mx-auto lg:mx-0 text-muted-foreground font-body text-base md:text-lg leading-relaxed">
+            Five worlds. One studio. Pick a category to explore our work and start your project.
           </p>
         </motion.div>
 
         <div onMouseMove={onMouseMove} onMouseLeave={() => setHovered(null)}>
           {CATEGORIES.map((cat, i) => (
-            <WorkRow
+            <GateRow
               key={cat.slug}
               category={cat}
               index={i}
               hovered={hovered === cat.slug}
               anyHovered={hovered !== null}
               onHover={(h) => setHovered(h ? cat.slug : null)}
+              onSelect={() => handleSelect(cat.slug)}
             />
           ))}
           <div className="border-t border-border" />
@@ -88,22 +101,24 @@ const CategoriesSection = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   );
 };
 
-const WorkRow = ({
+const GateRow = ({
   category,
   index,
   hovered,
   anyHovered,
   onHover,
+  onSelect,
 }: {
   category: (typeof CATEGORIES)[number];
   index: number;
   hovered: boolean;
   anyHovered: boolean;
   onHover: (hovering: boolean) => void;
+  onSelect: () => void;
 }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
@@ -116,11 +131,12 @@ const WorkRow = ({
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link
-        to={`/services/${category.slug}`}
+      <button
+        type="button"
+        onClick={onSelect}
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}
-        className={`group roll-trigger relative grid grid-cols-[2.5rem_1fr_auto] lg:grid-cols-[4rem_1fr_16rem_7rem_3rem] items-center gap-4 lg:gap-8 border-t border-border py-8 lg:py-10 transition-opacity duration-300 ${
+        className={`group roll-trigger relative w-full text-left grid grid-cols-[2.5rem_1fr_auto] lg:grid-cols-[4rem_1fr_16rem_7rem_3rem] items-center gap-4 lg:gap-8 border-t border-border py-8 lg:py-10 transition-opacity duration-300 ${
           anyHovered && !hovered ? "opacity-35" : "opacity-100"
         }`}
       >
@@ -168,9 +184,9 @@ const WorkRow = ({
         >
           ↗
         </span>
-      </Link>
+      </button>
     </motion.div>
   );
 };
 
-export default CategoriesSection;
+export default CategoryGate;

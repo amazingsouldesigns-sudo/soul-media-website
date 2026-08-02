@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { HERO_VIDEOS } from "@/lib/videos";
+import { useCategory } from "@/context/CategoryContext";
 
 const videos = HERO_VIDEOS;
 
@@ -14,6 +16,7 @@ const stats = [
 ];
 
 const HeroSection = () => {
+  const { projectHref } = useCategory();
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -135,20 +138,20 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-wrap items-center gap-8 mt-10"
         >
-          <a
-            href="#categories"
+          <Link
+            to={projectHref}
             className="shiny-cta group flex items-center text-sm font-semibold tracking-[0.06em] uppercase px-7 py-4"
           >
             <span>
               Start a project
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
-          </a>
+          </Link>
           <a
-            href="#work"
+            href="#services"
             className="text-mono-label text-muted-foreground hover:text-primary transition-colors duration-300 underline-offset-8 hover:underline"
           >
-            Selected work ↓
+            Our capabilities ↓
           </a>
         </motion.div>
 

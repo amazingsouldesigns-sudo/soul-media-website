@@ -5,7 +5,8 @@ import { ArrowLeft, Mail, MessageCircle, Calendar, CheckCircle2 } from "lucide-r
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookingForm from "@/components/BookingForm";
-import { CATEGORIES } from "@/components/CategoriesSection";
+import { CATEGORIES } from "@/lib/categories";
+import { useCategory } from "@/context/CategoryContext";
 import { CONTACT, buildWhatsAppUrl, buildMailtoUrl } from "@/lib/contact";
 import { CATEGORY_REELS } from "@/lib/categoryReels";
 import krispyKreme from "@/assets/brands/krispy-kreme.svg";
@@ -150,8 +151,15 @@ const LazyReelVideo = ({ src, label }: { src: string; label: string }) => {
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { setSelectedCategory } = useCategory();
   const category = CATEGORIES.find((c) => c.slug === slug);
   const reels = category ? CATEGORY_REELS[category.slug] ?? [] : [];
+
+  useEffect(() => {
+    if (slug && category) {
+      setSelectedCategory(slug);
+    }
+  }, [slug, category, setSelectedCategory]);
 
   useEffect(() => {
     if (category) {
@@ -168,11 +176,13 @@ const CategoryPage = () => {
     }
   }, [category]);
 
-  // Smooth-scroll to #enquire if the hash is present on load
+  // Smooth-scroll to hash targets on load
   useEffect(() => {
-    if (window.location.hash === "#enquire") {
+    const hash = window.location.hash;
+    if (hash === "#enquire" || hash === "#reels") {
+      const id = hash.slice(1);
       setTimeout(() => {
-        document.getElementById("enquire")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
     }
   }, [slug]);
@@ -192,10 +202,10 @@ const CategoryPage = () => {
       <section className="pt-32 pb-20 lg:pt-40 lg:pb-28 border-b border-border">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <Link
-            to="/#categories"
+            to="/"
             className="inline-flex items-center gap-2 text-mono-label text-muted-foreground hover:text-primary transition-colors duration-300 mb-12"
           >
-            <ArrowLeft className="w-3 h-3" /> All categories
+            <ArrowLeft className="w-3 h-3" /> Back to home
           </Link>
 
           <motion.div
@@ -235,7 +245,7 @@ const CategoryPage = () => {
       </section>
 
       {/* Reels */}
-      <section id="reels" className="py-20 lg:py-28 border-b border-border">
+      <section id="reels" className="py-20 lg:py-28 border-b border-border scroll-mt-24">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-16">
           <div className="flex items-center gap-4 mb-8">
             <div className="w-10 h-px bg-border" />
